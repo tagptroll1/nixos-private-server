@@ -1,0 +1,6 @@
+*.txt
+*.env
+*.plain
+*.tmp
+*.tmp.*
+*.age

@@ -36,6 +36,8 @@
   };
 
   environment.systemPackages = with pkgs; [
+	  pkgs.home-manager
+		tmux
     docker
     vim
     git

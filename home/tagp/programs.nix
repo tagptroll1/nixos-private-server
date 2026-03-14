@@ -25,16 +25,28 @@
 		marksman
   ];
 
-	programs.bash.initExtra = ''
-    export NIX_SHELL_DEPTH=$(( ''${NIX_SHELL_DEPTH:-0} + 1 ))
+	programs.bash = {
+    enable = true;
+    initExtra = ''
+      export NIX_SHELL_DEPTH=$(( ''${NIX_SHELL_DEPTH:-0} + 1 ))
 
-    _nix_shell_indicator() {
-      if [[ -n "$IN_NIX_SHELL" ]]; then
-        local label="''${name:-''${IN_NIX_SHELL}}"
-        echo "(nix:''${NIX_SHELL_DEPTH}:''${label}) "
-      fi
-    }
+      _nix_shell_indicator() {
+        local label=""
+        local nix_paths=$(echo "$PATH" | tr ':' '\n' | grep -c '/nix/store')
 
-    PS1='$(_nix_shell_indicator)'"$PS1"
-  '';
+        if [[ -n "$IN_NIX_SHELL" ]]; then
+          label="''${name:-''${IN_NIX_SHELL}}"
+        elif [[ $nix_paths -ge 1 ]]; then
+          label="nix-shell"
+        else
+          echo "(sys) "
+          return
+        fi
+
+        echo "(''${label}:depth=''${NIX_SHELL_DEPTH}) "
+      }
+
+      PS1='$(_nix_shell_indicator)'"$PS1"
+    '';
+	};
 }

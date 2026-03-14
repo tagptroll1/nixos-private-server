@@ -39,14 +39,13 @@
         elif [[ $nix_paths -ge 1 ]]; then
           label="nix-shell"
         else
-          echo "(sys) "
           return
         fi
 
-        echo "(''${label}:depth=''${NIX_SHELL_DEPTH}) "
+        echo -n "(''${label}:''${NIX_SHELL_DEPTH})"
       }
 
-      PS1='$(_nix_shell_indicator)'"$PS1"
+      PS1='\[\e[0;36m\]$(_nix_shell_indicator)\[\e[0m\] \u@\h:\w\$ '
     '';
-	};
+  };
 }

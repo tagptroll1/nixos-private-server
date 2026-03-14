@@ -1,14 +1,22 @@
 { pkgs, ... }: {
-	users.motd = ''
-		┌─────────────────────────────────────────┐
-		│                                         │
-		│   󰒋  server                             │
-		│                                         │
-		│   OS   NixOS                            │
-		│   User $(whoami)                        │
-		│   Secret $secret                        │
-		└─────────────────────────────────────────┘
-	'';
+  environment.etc."motd.sh" = {
+    mode = "0755";
+    text = ''
+      #!/bin/sh
+      echo ""
+      echo "  ┌─────────────────────────────────────────┐"
+      echo "  │                                         │"
+      echo "  │   󰒋  $(hostname)                        │"
+      echo "  │                                         │"
+      echo "  │   OS      NixOS                         │"
+      echo "  │   User    $(whoami)                     │"
+      echo "  │   Secret  $secret                       │"
+      echo "  └─────────────────────────────────────────┘"
+      echo ""
+    '';
+  };
+
+  programs.bash.loginShellInit = "/etc/motd.sh";
 
 	services = {
 		openssh = {

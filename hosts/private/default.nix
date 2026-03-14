@@ -16,7 +16,7 @@
   console.keyMap = "no-latin1";
 
 	sops.age.keyFile = "/etc/age/host.key";
-	sops.defaultSopsfile = ./secrets/motdSecret.yaml;
+	sops.defaultSopsFile = ./secrets/motdSecret.yaml;
 	sops.secrets = {
 		secret = {};
 	};

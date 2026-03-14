@@ -46,6 +46,8 @@
       }
 
       PS1='\[\e[0;36m\]$(_nix_shell_indicator)\[\e[0m\] \u@\h:\w\$ '
+
+			export SOPS_AGE_KEY_FILE="/etc/age/host.key"
     '';
   };
 }

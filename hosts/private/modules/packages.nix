@@ -9,6 +9,7 @@
     curl
 		htop
 		btop
+		sops
     # add more here
   ];
 	programs.neovim = {

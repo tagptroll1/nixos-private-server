@@ -21,7 +21,7 @@
 			private = nixpkgs.lib.nixosSystem {
 				specialArgs = { inherit inputs; };
 				modules = [
-					./hosts/server
+					./hosts/private
 					agenix.nixosModules.default
 					home-manager.nixosModules.home-manager
 					{

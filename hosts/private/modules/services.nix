@@ -1,4 +1,15 @@
 { pkgs, ... }: {
+	users.motd = ''
+		┌─────────────────────────────────────────┐
+		│                                         │
+		│   󰒋  server                             │
+		│                                         │
+		│   OS   NixOS                            │
+		│   User $(whoami)                        │
+		│   Secret $secret                        │
+		└─────────────────────────────────────────┘
+	'';
+
 	services = {
 		openssh = {
 			enable = true;

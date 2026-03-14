@@ -14,4 +14,10 @@
 	time.timeZone = "Europe/Oslo";
   i18n.defaultLocale = "en_GB.UTF-8";
   console.keyMap = "no-latin1";
+
+	sops.age.keyFile = "/etc/age/host.key";
+	sops.defaultSopsfile = ./secrets/motdSecret.yaml;
+	sops.secrets = {
+		secret = {};
+	};
 }

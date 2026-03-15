@@ -19,7 +19,6 @@
 		};
 		quadlet-nix = {                                    # add this
 			url = "github:SEIAROTg/quadlet-nix";
-			inputs.nixpkgs.follows = "nixpkgs";
 		};
   };
 
@@ -42,7 +41,7 @@
 					{
 						home-manager.useGlobalPkgs = true;
 						home-manager.useUserPackages = true;
-						home-manager.extraSpecialArgs = { inherit inputs; };
+						home-manager.extraSpecialArgs = { inherit inputs; hostConfig = hosts.private; };
 						home-manager.users.tagp = import ./home/tagp;
 						home-manager.users.podman = import ./hosts/private/home-rootless.nix;
 					}

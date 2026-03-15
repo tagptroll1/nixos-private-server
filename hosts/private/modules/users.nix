@@ -1,4 +1,4 @@
-{ ... }: {
+{ pkgs, ... }: {
 	users.groups.tagp = {};
   users.users.tagp = {
     isNormalUser = true;

@@ -1,5 +1,6 @@
-{ lib, ... }: {
+{ lib, inputs, ... }: {
   imports = [
+		inputs.quadlet-nix.homeManagerModules.quadlet
     ./containers/hello    # rootless containers go here
   ];
 

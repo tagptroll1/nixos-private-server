@@ -5,6 +5,8 @@
     defaultNetwork.settings.dns_enabled = true;
   };
 
+	virtualisation.quadlet.enable = true;
+
   # allow rootless containers to use low ports if ever needed
   # and ensure cgroup v2 is available for proper resource tracking
   boot.kernelParams = [ "systemd.unified_cgroup_hierarchy=1" ];

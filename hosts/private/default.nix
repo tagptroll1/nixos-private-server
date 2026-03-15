@@ -23,10 +23,12 @@
 	sops.secrets = {
 		"motd/secret" = {
 			sopsFile = ./secrets/motdSecret.yaml;
+			key = "secret";
 			owner = "tagp";
 		};
 		"hello/secret" = {
 			sopsFile = ./containers/hello/secret.yaml;
+			key = "secret";
 			owner = "tagp";
 		};
 	};

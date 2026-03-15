@@ -4,7 +4,7 @@
   text = ''
     #!/bin/sh
     motd() {
-      local secret=$(cat ${config.sops.secrets."secret".path})
+      local secret=$(cat ${config.sops.secrets."motd/secret".path})
       local user=$(whoami)
       local host="${hostConfig.hostname}"
       local width=45

@@ -5,7 +5,7 @@
 		useDHCP = false;
 		firewall = {
 			enable = true;
-			allowedTCPPorts = [];
+			allowedTCPPorts = [ 8080 ];
 		};
 		interfaces.${hostConfig.interface}.ipv4.addresses = [{
 			address = hostConfig.ip;

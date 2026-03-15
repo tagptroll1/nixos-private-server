@@ -1,23 +1,25 @@
 { pkgs, hostConfig, ... }:
 let
-  serveScript = pkgs.writeScriptBin "serve.sh" ''
-    #!/bin/bash
-    while true; do
-      printf "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\n\r\nHello, world!\nThe secret word is: %s\n" \
-        "$SECRET_PHRASE" | nc -l -p 8080 -q 1
-    done
-  '';
+  serveScript = pkgs.writeShellScriptBin "serve.sh" ''
+		while true; do
+			{ 
+				printf "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nConnection: close\r\n\r\nHello, world!\nThe secret word is: %s\r\n" \
+					"$SECRET_PHRASE"
+			} | socat -u STDIN TCP-LISTEN:8080,reuseaddr
+		done
+	'';
+
 
   image = pkgs.dockerTools.buildImage {
-    name = "hello-server";
-    tag = "latest";
-    copyToRoot = pkgs.buildEnv {
-      name = "hello-env";
-      paths = [ pkgs.bash pkgs.coreutils pkgs.netcat-gnu serveScript ];
-      pathsToLink = [ "/bin" ];
-    };
-    config.Cmd = [ "/bin/serve.sh" ];
-  };
+		name = "hello-server";
+		tag = "latest";
+		copyToRoot = pkgs.buildEnv {
+			name = "hello-env";
+			paths = [ pkgs.bash pkgs.coreutils pkgs.socat serveScript ];
+			pathsToLink = [ "/bin" ];
+		};
+		config.Cmd = [ "/bin/bash" "/bin/serve.sh" ];
+	};
 in
 {
   virtualisation.quadlet.containers.hello = {

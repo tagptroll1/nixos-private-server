@@ -18,6 +18,6 @@
 	sops.age.keyFile = "/etc/age/host.key";
 	sops.defaultSopsFile = ./secrets/motdSecret.yaml;
 	sops.secrets = {
-		secret = {};
+		secret = { owner = "tagp"; };
 	};
 }

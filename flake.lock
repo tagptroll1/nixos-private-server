@@ -109,11 +109,28 @@
         "type": "github"
       }
     },
+    "nvim-config": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1772534009,
+        "narHash": "sha256-mqfMHMF9F2WpiKX9uBLDDi4yL/FpAhhFxmvWWUgPrJs=",
+        "owner": "tagptroll1",
+        "repo": "nvim",
+        "rev": "bad0dc5d3d1703b2b0593727eca3ab48c1c50cea",
+        "type": "github"
+      },
+      "original": {
+        "owner": "tagptroll1",
+        "repo": "nvim",
+        "type": "github"
+      }
+    },
     "root": {
       "inputs": {
         "home-manager": "home-manager",
         "neovim-nightly": "neovim-nightly",
         "nixpkgs": "nixpkgs_2",
+        "nvim-config": "nvim-config",
         "sops-nix": "sops-nix"
       }
     },

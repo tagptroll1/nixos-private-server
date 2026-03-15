@@ -13,13 +13,22 @@
 			url = "github:Mic92/sops-nix";
 			inputs.nixpkgs.follows = "nixpkgs";
 		};
+		nvim-config = {
+			url = "github:tagptroll1/nvim";
+			flake = false;
+		};
   };
 
 	outputs = { nixpkgs, home-manager, sops-nix, ...}@inputs:
+	let 
+		hosts = import ./lib/hosts.nix;
+	in
 	{
 		nixosConfigurations = {
 			private = nixpkgs.lib.nixosSystem {
-				specialArgs = { inherit inputs; };
+				specialArgs = { 
+					inherit inputs;
+					hostConfig = hosts.private; };
 				modules = [
 					sops-nix.nixosModules.sops
 					./hosts/private
@@ -27,6 +36,7 @@
 					{
 						home-manager.useGlobalPkgs = true;
 						home-manager.useUserPackages = true;
+						home-manager.extraSpecialArgs = { inherit inputs; };
 						home-manager.users.tagp = import ./home/tagp;
 					}
 				];

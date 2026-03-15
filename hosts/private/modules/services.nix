@@ -1,59 +1,53 @@
-{ pkgs, ... }: {
+{ config, hostConfig, ... }: {
   environment.etc."motd.sh" = {
-    mode = "0755";
-    text = ''
-      #!/bin/sh
+  mode = "0755";
+  text = ''
+    #!/bin/sh
+    motd() {
+      local secret=$(cat ${config.sops.secrets."secret".path})
+      local user=$(whoami)
+      local host="${hostConfig.hostname}"
+      local width=45
+
+      pad() {
+        local str="$1"
+        local total="$2"
+        local len=$(echo -n "$str" | wc -m)
+        local spaces=$((total - len))
+        printf "%s%*s" "$str" "$spaces" ""
+      }
+
       echo ""
-      echo "  ┌─────────────────────────────────────────┐"
-      echo "  │                                         │"
-      echo "  │   󰒋  $(hostname)                        │"
-      echo "  │                                         │"
-      echo "  │   OS      NixOS                         │"
-      echo "  │   User    $(whoami)                     │"
-      echo "  │   Secret  $secret                       │"
-      echo "  └─────────────────────────────────────────┘"
+      echo "  ┌$(printf '─%.0s' $(seq 1 $width))┐"
+      echo "  │$(printf ' %.0s' $(seq 1 $width))│"
+      echo "  │   󰒋  $(pad "$host" $((width - 6)))│"
+      echo "  │$(printf ' %.0s' $(seq 1 $width))│"
+      echo "  │   OS      $(pad "NixOS" $((width - 11)))│"
+      echo "  │   User    $(pad "$user" $((width - 11)))│"
+      echo "  │   Secret  $(pad "$secret" $((width - 11)))│"
+      echo "  │$(printf ' %.0s' $(seq 1 $width))│"
+      echo "  └$(printf '─%.0s' $(seq 1 $width))┘"
       echo ""
-    '';
-  };
+    }
+    motd
+  '';
+	};
 
   programs.bash.loginShellInit = "/etc/motd.sh";
 
 	services = {
 		openssh = {
 			enable = true;
+			listenAddresses = [{
+				addr = hostConfig.ip;
+				port = 22;
+			}];	
 			settings = {
-				PermitRootLogin = "yes";
-				PasswordAuthentication = true;
+				PermitRootLogin = "no";
+				PasswordAuthentication = false;
+				KbdInteractiveAuthentication = false;
 			};
 		};
 		qemuGuest.enable = true;
-	};
-
-  systemd.services."nvim-config" = {
-	  description = "Pull and override Nvim config";
-	  after = [ "network-online.target" ];
-	  wants = [ "network-online.target" ];
-	  wantedBy = [ "multi-user.target" ];
-
-	  serviceConfig = {
-	    Type = "oneshot";
-	    User = "tagp";
-	    RemainAfterExit = true;
-	  };
-
-	  script =
-	    let
-	      inherit (pkgs) git;
-	      configDir = "/home/tagp/.config/nvim";
-	      repo = "https://github.com/tagptroll1/nvim";
-	    in
-	    ''
-	      if [ -d ${configDir}/.git ]; then
-					${git}/bin/git -C ${configDir} pull
-	      else
-					rm -rf ${configDir}
-					${git}/bin/git clone ${repo} ${configDir}
-	      fi
-	    '';
 	};
 }

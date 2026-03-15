@@ -1,7 +1,7 @@
-{ pkgs, ... }: {
+{ pkgs, inputs, ... }: {
   programs.git = {
     enable = true;
-		extraConfig = {
+		settings = {
 			user.name = "thomas";
 			user.email = "thomas@petersson.priv.no";
 		};
@@ -11,6 +11,11 @@
     enable = true;
     defaultEditor = true;
   };
+
+	xdg.configFile."nvim" = {
+		source = inputs.nvim-config;
+		recursive = true;
+	};
 
   home.packages = with pkgs; [
     # user-specific packages that don't need to be system-wide
@@ -23,6 +28,7 @@
 		vscode-langservers-extracted
 		bash-language-server
 		marksman
+		fzf
   ];
 
 	programs.bash = {
@@ -46,8 +52,6 @@
       }
 
       PS1='\[\e[0;36m\]$(_nix_shell_indicator)\[\e[0m\] \u@\h:\w\$ '
-
-			export SOPS_AGE_KEY_FILE="/etc/age/host.key"
     '';
   };
 }

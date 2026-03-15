@@ -4,7 +4,7 @@ let
     #!/bin/bash
     while true; do
       printf "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\n\r\nHello, world!\nThe secret word is: %s\n" \
-        "$secret" | nc -l -p 8080 -q 1
+        "$SECRET_PHRASE" | nc -l -p 8080 -q 1
     done
   '';
 

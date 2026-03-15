@@ -9,6 +9,10 @@
 		./modules/users.nix
 		./modules/services.nix
 		./modules/packages.nix
+		./modules/podman.nix
+
+		# Containers
+		./containers/hello
 	];
 
 	time.timeZone = "Europe/Oslo";
@@ -16,8 +20,14 @@
   console.keyMap = "no-latin1";
 
 	sops.age.keyFile = "/etc/age/host.key";
-	sops.defaultSopsFile = ./secrets/motdSecret.yaml;
 	sops.secrets = {
-		secret = { owner = "tagp"; };
+		"motd/secret" = {
+			sopsFile = ./secrets/motdSecret.yaml;
+			owner = "tagp";
+		};
+		"hello/secret" = {
+			sopsFile = ./containers/hello/secret.yaml;
+			owner = "tagp";
+		};
 	};
 }

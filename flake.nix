@@ -17,9 +17,13 @@
 			url = "github:tagptroll1/nvim";
 			flake = false;
 		};
+		quadlet-nix = {                                    # add this
+			url = "github:SEIAROTg/quadlet-nix";
+			inputs.nixpkgs.follows = "nixpkgs";
+		};
   };
 
-	outputs = { nixpkgs, home-manager, sops-nix, ...}@inputs:
+	outputs = { nixpkgs, home-manager, sops-nix, quadlet-nix, ...}@inputs:
 	let 
 		hosts = import ./lib/hosts.nix;
 	in
@@ -28,9 +32,11 @@
 			private = nixpkgs.lib.nixosSystem {
 				specialArgs = { 
 					inherit inputs;
-					hostConfig = hosts.private; };
+					hostConfig = hosts.private;
+				};
 				modules = [
 					sops-nix.nixosModules.sops
+					quadlet-nix.nixosModules.quadlet
 					./hosts/private
 					home-manager.nixosModules.home-manager
 					{
@@ -38,6 +44,7 @@
 						home-manager.useUserPackages = true;
 						home-manager.extraSpecialArgs = { inherit inputs; };
 						home-manager.users.tagp = import ./home/tagp;
+						home-manager.users.podman = import ./hosts/private/home-rootless.nix;
 					}
 				];
 			};

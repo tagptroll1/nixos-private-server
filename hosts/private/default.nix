@@ -28,8 +28,8 @@
 		};
 		"hello/secret" = {
 			sopsFile = ./containers/hello/secret.yaml;
-			format = "dotenv";
 			owner = "podman";
+			key = "secret";
 		};
 	};
 }

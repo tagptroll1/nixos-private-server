@@ -10,6 +10,8 @@
 		./modules/services.nix
 		./modules/packages.nix
 		./modules/podman.nix
+		./modules/caddy.nix
+		./modules/uptime-kuma.nix
 
 		# Containers
 		./containers/hello
@@ -30,6 +32,11 @@
 			sopsFile = ./containers/hello/secret.yaml;
 			owner = "podman";
 			key = "secret";
+		};
+		"caddy/domeneshop_token" = {
+			sopsFile = ./secrets/caddySecret.yaml;
+			key = "token";
+			owner = "caddy";
 		};
 	};
 }

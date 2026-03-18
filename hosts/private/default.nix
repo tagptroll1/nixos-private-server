@@ -10,7 +10,6 @@
 		./modules/services.nix
 		./modules/packages.nix
 		./modules/podman.nix
-		./modules/caddy.nix
 		./modules/uptime-kuma.nix
 
 		# Containers

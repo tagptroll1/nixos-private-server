@@ -1,57 +1,62 @@
 { config, pkgs, hostConfig, ... }: {
-	networking = {
-		hostName = hostConfig.hostname;
-		networkmanager.enable = false;
-		useDHCP = false;
-		firewall = {
-			enable = true;
-			allowedTCPPorts = [ 80 443 8080 ];
-		};
-		interfaces.${hostConfig.interface}.ipv4.addresses = [{
-			address = hostConfig.ip;
-			prefixLength = hostConfig.prefixLength;
-		}];
-		defaultGateway = hostConfig.gateway;
-		nameservers = hostConfig.nameservers;
-	};
+  networking = {
+    hostName = hostConfig.hostname;
+    networkmanager.enable = false;
+    useDHCP = false;
+    firewall = {
+      enable = true;
+      allowedTCPPorts = [ 80 443 8080 ];
+    };
+    interfaces.${hostConfig.interface}.ipv4.addresses = [{
+      address = hostConfig.ip;
+      prefixLength = hostConfig.prefixLength;
+    }];
+    defaultGateway = hostConfig.gateway;
+    nameservers = hostConfig.nameservers;
+  };
 
-  # Caddy built with the domeneshop DNS-01 plugin
   services.caddy = {
     enable = true;
     package = pkgs.caddy.withPlugins {
       plugins = [
-        "github.com/caddy-dns/domeneshop@v0.0.5"
+        "github.com/tagptroll1/caddy-dns-domeneshop@v0.1.3"
       ];
-      # Run `nix-prefetch` or let it fail once to get the correct hash
-      hash = pkgs.lib.fakeHash;
+      # Leave as "" for first build — it will fail and print:
+      #   got: sha256-<hash>
+      # Paste that value here and rebuild.
+      hash = "sha256-EI7Sgkt9aD5sF8jkpPWgYFwDORWeUNNDUPlIGkYmRUk=";
     };
 
-    # Global ACME config — domeneshop DNS challenge
     globalConfig = ''
       acme_dns domeneshop {
-        token      {env.DOMENESHOP_API_TOKEN}
-        secret     {env.DOMENESHOP_API_SECRET}
+        token  {env.DOMENESHOP_API_TOKEN}
+        secret {env.DOMENESHOP_API_SECRET}
       }
     '';
 
-    # Each virtualHost becomes a subdomain
-    virtualHosts = {
-      "status.ybmn.no" = {
-        extraConfig = ''
-          reverse_proxy 127.0.0.1:3001
-        '';
-      };
-
-      # Add future services here, e.g.:
-      # "grafana.ybmn.no" = {
-      #   extraConfig = ''
-      #     reverse_proxy 10.0.10.X:3000
-      #   '';
-      # };
-    };
+    virtualHosts =
+      let
+        # Generates both the canonical HTTPS host and a www+http redirect
+        mkVHost = domain: upstream: {
+          "${domain}" = {
+            extraConfig = ''
+              reverse_proxy ${upstream}
+            '';
+          };
+          "www.${domain}" = {
+            extraConfig = ''
+              redir https://${domain}{uri} permanent
+            '';
+          };
+        };
+      in
+        (mkVHost "status.ybmn.no" "127.0.0.1:3001")
+        # Add future services by appending with //
+        # // (mkVHost "grafana.ybmn.no" "127.0.0.1:3000")
+        # // (mkVHost "nextcloud.ybmn.no" "127.0.0.1:8080")
+      ;
   };
 
-  # Inject domeneshop credentials from sops into caddy's systemd unit
   systemd.services.caddy.serviceConfig = {
     EnvironmentFile = config.sops.secrets."caddy/domeneshop_token".path;
   };

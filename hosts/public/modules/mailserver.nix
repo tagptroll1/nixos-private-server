@@ -43,7 +43,7 @@
 	users.users.postfix.extraGroups  = [ "acme" ];
 
 	services.postfix.settings.main = {
-		relayhost = "[91.99.59.171]:587";
+		relayhost = [ "[91.99.59.171]:587" ];
 		mynetworks = [
 			"127.0.0.0/8"
 			"10.0.10.0/24"

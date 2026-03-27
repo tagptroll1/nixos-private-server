@@ -21,9 +21,9 @@
 		services = [
 			{
 				"Monitoring" = [
-					{ "Grafana"     = { href = "https://grafana.ybmn.no";  description = "Metrics";     icon = "grafana.png"; }; }
-					{ "Uptime Kuma" = { href = "https://status.ybmn.no";   description = "Status";      icon = "uptime-kuma.png"; }; }
-					{ "Proxmox"     = { href = "https://proxmox.ybmn.no";  description = "Hypervisor";  icon = "proxmox.png"; }; }
+					{ "Grafana"     = { href = "http://10.0.0.5:3000";   description = "Metrics";    icon = "grafana.png"; }; }
+					{ "Uptime Kuma" = { href = "https://status.ybmn.no";  description = "Status";     icon = "uptime-kuma.png"; }; }
+					{ "Proxmox"     = { href = "https://10.0.0.69:8006";  description = "Hypervisor"; icon = "proxmox.png"; }; }
 				];
 			}
 			{

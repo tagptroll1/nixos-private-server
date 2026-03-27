@@ -1,6 +1,18 @@
 { config, pkgs, hostConfig, ... }:
 let
   inherit (pkgs) it-tools;
+  # Only serve to LAN — blocks access from public VM, internet pivots, etc.
+  # Even if MikroTik firewall is misconfigured, Caddy won't serve these externally.
+  lanOnly = upstream: ''
+    @lan remote_ip 192.168.0.0/24 192.168.54.0/24
+    handle @lan {
+      reverse_proxy ${upstream}
+    }
+    respond "Access denied" 403
+  '';
+  # Network hierarchy: VMs (private/public) must NOT reach 10.0.0.x (Server subnet).
+  # Grafana (10.0.0.5) and Proxmox (10.0.0.69) are accessed directly from LAN —
+  # not proxied through Caddy here.
 in {
   networking = {
     hostName = hostConfig.hostname;
@@ -56,33 +68,24 @@ in {
         (mkVHost "status.ybmn.no" "127.0.0.1:3001")
         // (mkVHost "file.ybmn.no" "127.0.0.1:3030")
         // (mkVHost "files.ybmn.no" "127.0.0.1:3030")
-        // (mkVHost "home.ybmn.no" "127.0.0.1:8082")
-        // (mkVHost "grafana.ybmn.no" "10.0.0.5:3000")
         // {
-          # IT Tools: static SPA served directly from nix store (no container needed)
+          # LAN-restricted services — 403 for anything outside 192.168.x.x
+          "home.ybmn.no".extraConfig    = lanOnly "127.0.0.1:8082";
+          "www.home.ybmn.no".extraConfig = "redir https://home.ybmn.no{uri} permanent";
+
+          # IT Tools: static SPA from nix store, LAN only
           "tools.ybmn.no" = {
             extraConfig = ''
-              root * ${it-tools}/lib
-              file_server
-            '';
-          };
-          "www.tools.ybmn.no" = {
-            extraConfig = "redir https://tools.ybmn.no{uri} permanent";
-          };
-          # Proxmox: backend uses self-signed cert; tls_insecure_skip_verify is backend-only.
-          # DNS: proxmox.ybmn.no must point to 10.0.20.5 (this host), not 10.0.0.69 directly.
-          "proxmox.ybmn.no" = {
-            extraConfig = ''
-              reverse_proxy 10.0.0.69:8006 {
-                transport http {
-                  tls_insecure_skip_verify
-                }
+              @lan remote_ip 192.168.0.0/24 192.168.54.0/24
+              handle @lan {
+                root * ${it-tools}/lib
+                file_server
               }
+              respond "Access denied" 403
             '';
           };
-          "www.proxmox.ybmn.no" = {
-            extraConfig = "redir https://proxmox.ybmn.no{uri} permanent";
-          };
+          "www.tools.ybmn.no".extraConfig = "redir https://tools.ybmn.no{uri} permanent";
+
         }
       ;
   };

@@ -1,9 +1,8 @@
 { ... }: {
-	systemd.services.homepage-dashboard.environment.HOMEPAGE_ALLOWED_HOSTS = "home.ybmn.no";
-
 	services.homepage-dashboard = {
 		enable = true;
 		listenPort = 8082;
+		allowedHosts = "home.ybmn.no";
 		settings = {
 			title = "Home";
 			headerStyle = "clean";

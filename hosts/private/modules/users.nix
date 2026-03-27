@@ -4,7 +4,7 @@
     isNormalUser = true;
 		group = "tagp";
     description  = "Main account";
-    extraGroups = [ "wheel" "podman" ]; # Enable ‘sudo’ for the user.
+    extraGroups = [ "wheel" "podman" "noodledrive"  ]; # Enable ‘sudo’ for the user.
     openssh.authorizedKeys.keys = [ "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINiXPaVoHFnjA3wTgXLvWPPMUfpWi+C3hnCFBYtlpMYs thomas@petersson.priv.no" ];
   };
 

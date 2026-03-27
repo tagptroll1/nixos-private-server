@@ -24,7 +24,7 @@
       # Leave as "" for first build — it will fail and print:
       #   got: sha256-<hash>
       # Paste that value here and rebuild.
-      hash = "sha256-EI7Sgkt9aD5sF8jkpPWgYFwDORWeUNNDUPlIGkYmRUk=";
+      hash = "sha256-sFRz/HHY6eRbBoWq00qBuUa56gLz1sWUmJTU3aNpVMI=";
     };
 
     globalConfig = ''
@@ -51,6 +51,8 @@
         };
       in
         (mkVHost "status.ybmn.no" "127.0.0.1:3001")
+        // (mkVHost "file.ybmn.no" "127.0.0.1:3030")
+        // (mkVHost "files.ybmn.no" "127.0.0.1:3030")
         # Add future services by appending with //
         # // (mkVHost "grafana.ybmn.no" "127.0.0.1:3000")
         # // (mkVHost "nextcloud.ybmn.no" "127.0.0.1:8080")

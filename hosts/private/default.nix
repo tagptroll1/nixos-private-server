@@ -11,10 +11,17 @@
 		./modules/packages.nix
 		./modules/podman.nix
 		./modules/uptime-kuma.nix
+		./modules/filebrowser.nix
 
 		# Containers
 		./containers/hello
 	];
+	# set with e2label / mkfs.ext4 -L vmdata
+	fileSystems."/mnt/data" = {
+		device  = "LABEL=vmdata";   # kernel resolves this directly
+		fsType  = "ext4";
+		options = [ "nofail" "x-systemd.device-timeout=10s" ];
+	};
 
 	time.timeZone = "Europe/Oslo";
   i18n.defaultLocale = "en_GB.UTF-8";

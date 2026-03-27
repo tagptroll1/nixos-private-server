@@ -33,6 +33,9 @@
 
 	programs.bash = {
     enable = true;
+    shellAliases = {
+      mysql = "mariadb";
+    };
     initExtra = ''
       export NIX_SHELL_DEPTH=$(( ''${NIX_SHELL_DEPTH:-0} + 1 ))
 

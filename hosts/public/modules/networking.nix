@@ -13,11 +13,9 @@
 				993   # IMAPS
 				8080  # WordPress via Pangolin
 				9999  # Karoline's static site
+				9100  # Prometheus node exporter
+				4040  # Prometheus nginxlog exporter
 			];
-			# Allow Prometheus LXC (10.0.0.3) to scrape exporters
-			extraInputRules = ''
-				ip saddr 10.0.0.3 tcp dport { 9100, 4040 } accept
-			'';
 		};
 		interfaces.${hostConfig.interface}.ipv4.addresses = [{
 			address = hostConfig.ip;

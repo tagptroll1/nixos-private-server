@@ -51,11 +51,6 @@ in
     serviceConfig = {
       Restart = "on-failure";
       RestartSec = "10";
-      # Remove any leftover container before starting (handles generation switches).
-      ExecStartPre = "-/run/current-system/sw/bin/podman rm -f hello";
-      # Kill rootlessport (podman's port forwarder) after stop so it doesn't
-      # hold the port and block the next start.
-      ExecStopPost = "-/run/current-system/sw/bin/podman rm -f hello";
     };
   };
 

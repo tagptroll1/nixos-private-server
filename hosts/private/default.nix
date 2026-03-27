@@ -2,12 +2,16 @@
 	imports = [
 		(modulesPath + "/profiles/qemu-guest.nix")
 		./hardware-configuration.nix
-		./modules/nix-configuration.nix
-		./modules/overlays.nix
-		./modules/boot.nix
+
+		# Shared modules
+		../../shared/modules/base.nix
+		../../shared/modules/overlays.nix
+		../../shared/modules/motd.nix
+		../../shared/modules/sshd.nix
+
+		# Host-specific modules
 		./modules/networking.nix
 		./modules/users.nix
-		./modules/services.nix
 		./modules/packages.nix
 		./modules/podman.nix
 		./modules/uptime-kuma.nix
@@ -22,10 +26,6 @@
 		fsType  = "ext4";
 		options = [ "nofail" "x-systemd.device-timeout=10s" ];
 	};
-
-	time.timeZone = "Europe/Oslo";
-  i18n.defaultLocale = "en_GB.UTF-8";
-  console.keyMap = "no-latin1";
 
 	sops.age.keyFile = "/etc/age/host.key";
 	sops.secrets = {

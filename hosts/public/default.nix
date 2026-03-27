@@ -21,6 +21,7 @@
 		./modules/mailserver.nix
 		./modules/wordpress.nix
 		./modules/static-sites.nix
+		./modules/exporters.nix
 	];
 
 	sops.age.keyFile = "/etc/age/host.key";

@@ -1,4 +1,7 @@
-{ config, pkgs, hostConfig, ... }: {
+{ config, pkgs, hostConfig, ... }:
+let
+  inherit (pkgs) it-tools;
+in {
   networking = {
     hostName = hostConfig.hostname;
     networkmanager.enable = false;
@@ -53,9 +56,34 @@
         (mkVHost "status.ybmn.no" "127.0.0.1:3001")
         // (mkVHost "file.ybmn.no" "127.0.0.1:3030")
         // (mkVHost "files.ybmn.no" "127.0.0.1:3030")
-        # Add future services by appending with //
-        # // (mkVHost "grafana.ybmn.no" "127.0.0.1:3000")
-        # // (mkVHost "nextcloud.ybmn.no" "127.0.0.1:8080")
+        // (mkVHost "home.ybmn.no" "127.0.0.1:8082")
+        // (mkVHost "grafana.ybmn.no" "10.0.0.5:3000")
+        // {
+          # IT Tools: static SPA served directly from nix store (no container needed)
+          "tools.ybmn.no" = {
+            extraConfig = ''
+              root * ${it-tools}/lib
+              file_server
+            '';
+          };
+          "www.tools.ybmn.no" = {
+            extraConfig = "redir https://tools.ybmn.no{uri} permanent";
+          };
+          # Proxmox: backend uses self-signed cert; tls_insecure_skip_verify is backend-only.
+          # DNS: proxmox.ybmn.no must point to 10.0.20.5 (this host), not 10.0.0.69 directly.
+          "proxmox.ybmn.no" = {
+            extraConfig = ''
+              reverse_proxy 10.0.0.69:8006 {
+                transport http {
+                  tls_insecure_skip_verify
+                }
+              }
+            '';
+          };
+          "www.proxmox.ybmn.no" = {
+            extraConfig = "redir https://proxmox.ybmn.no{uri} permanent";
+          };
+        }
       ;
   };
 

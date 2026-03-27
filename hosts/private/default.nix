@@ -16,6 +16,7 @@
 		./modules/podman.nix
 		./modules/uptime-kuma.nix
 		./modules/filebrowser.nix
+		./modules/homepage.nix
 	];
 	# set with e2label / mkfs.ext4 -L vmdata
 	fileSystems."/mnt/data" = {

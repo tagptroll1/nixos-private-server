@@ -41,6 +41,11 @@ in
 	# ── Nginx virtual hosts ────────────────────────────────────────────────────
 	services.nginx.enable = true;
 
+	# Custom log format with request_time for Prometheus nginxlog exporter
+	services.nginx.commonHttpConfig = ''
+		log_format wordpress_combined '$remote_addr - $remote_user [$time_local] "$request" $status $body_bytes_sent "$http_referer" "$http_user_agent" $request_time';
+	'';
+
 	# Internal WordPress interface (exposed via Pangolin tunnel on port 8080)
 	services.nginx.virtualHosts."wordpress-pangolin" = {
 		listen = [{ addr = "0.0.0.0"; port = 8080; }];
@@ -52,6 +57,7 @@ in
 			add_header X-Content-Type-Options "nosniff" always;
 			add_header X-XSS-Protection "1; mode=block" always;
 			add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+			access_log /var/log/nginx/wordpress_access.log wordpress_combined;
 		'';
 
 		locations."/" = {

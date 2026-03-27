@@ -51,6 +51,9 @@ in
     serviceConfig = {
       Restart = "on-failure";
       RestartSec = "10";
+      # Remove any leftover container from a previous generation before starting.
+      # The '-' prefix tells systemd to ignore failure (no container = fine).
+      ExecStartPre = "-/run/current-system/sw/bin/podman rm -f hello";
     };
   };
 

@@ -39,5 +39,8 @@
 		"mail_hashed_password" = {
 			neededForUsers = true;
 		};
+		"mail_grafana_hashed_password" = {
+			neededForUsers = true;
+		};
 	};
 }

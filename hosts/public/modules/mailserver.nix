@@ -18,6 +18,9 @@
 				hashedPasswordFile = config.sops.secrets."mail_hashed_password".path;
 				aliases = [ "admin@yesbutmaybe.no" ];
 			};
+			"grafana@yesbutmaybe.no" = {
+				hashedPasswordFile = config.sops.secrets."mail_grafana_hashed_password".path;
+			};
 		};
 
 		x509.useACMEHost = "mail.yesbutmaybe.no";

@@ -12,7 +12,7 @@ in
     wants       = [ "network-online.target" ];
     wantedBy    = [ "multi-user.target" ];
 
-    path = with pkgs; [ git nodejs coreutils ];
+    path = with pkgs; [ git nodejs coreutils bash ];
 
     environment = {
       NODE_ENV = "production";
@@ -31,7 +31,7 @@ in
         git -C ${appDir} reset --hard origin/master
       fi
       cd ${appDir}
-      npm ci --prefer-offline
+      NODE_ENV=development npm ci
       npm run build
     '';
 

@@ -51,3 +51,20 @@ proton-pass-cli nix package wrapper in the config. This should give me quicker a
 - Email server
 
 More to come..
+
+
+## User
+
+
+## TODO:
+- Write down every manual task done outside of the nixos configuration
+    - Domeneshop DNS Records
+    - Domeneshop API Keys
+    - Hetzner Firewall
+    - Age public key in .sops.yaml (on my machine)
+- Install other cool services
+    - Immich
+- Build NAS with backup and data redundancy
+    - Multiple Disks with RAID
+    - Off-site backup (external disk)
+    - Maybe trust the data overloads with a cloud storage backup

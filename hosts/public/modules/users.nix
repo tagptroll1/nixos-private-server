@@ -11,4 +11,12 @@
 		isSystemUser = true;
 		group = "nginx";
 	};
+
+	# System user for the petersson.coffee Node.js app
+	users.users.peterssoncoffee = {
+		isSystemUser = true;
+		group        = "peterssoncoffee";
+		home         = "/var/lib/peterssoncoffee";
+	};
+	users.groups.peterssoncoffee = {};
 }

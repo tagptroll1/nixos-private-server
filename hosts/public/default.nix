@@ -21,6 +21,7 @@
 		./modules/mailserver.nix
 		./modules/wordpress.nix
 		./modules/static-sites.nix
+		./modules/peterssoncoffee.nix
 		./modules/exporters.nix
 	];
 
@@ -36,6 +37,7 @@
 		"newt-secret" = {};
 		"domeneshop_api_token" = {};
 		"domeneshop_api_secret" = {};
+		"github_token" = {};
 		"mail_hashed_password" = {
 			neededForUsers = true;
 		};

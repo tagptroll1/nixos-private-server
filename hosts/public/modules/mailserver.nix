@@ -21,6 +21,9 @@
 			"grafana@yesbutmaybe.no" = {
 				hashedPasswordFile = config.sops.secrets."mail_grafana_hashed_password".path;
 			};
+			"changes@yesbutmaybe.no" = {
+				hashedPasswordFile = config.sops.secrets."mail_changes_hashed_password".path;
+			};
 		};
 
 		x509.useACMEHost = "mail.yesbutmaybe.no";

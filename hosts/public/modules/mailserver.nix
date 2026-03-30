@@ -53,6 +53,7 @@
 		mynetworks = [
 			"127.0.0.0/8"
 			"10.0.10.0/24"
+			"10.0.20.0/24"  # private host — trusted relay, no auth needed
 		];
 		smtp_sasl_auth_enable = "no";
 		myorigin = "yesbutmaybe.no";

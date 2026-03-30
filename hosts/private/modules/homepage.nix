@@ -24,7 +24,8 @@
 				"Monitoring" = [
 					{ "Grafana"     = { href = "http://10.0.0.5:3000";   description = "Metrics";    icon = "grafana.png"; }; }
 					{ "Uptime Kuma" = { href = "https://status.ybmn.no";  description = "Status";     icon = "uptime-kuma.png"; }; }
-					{ "Proxmox"     = { href = "https://10.0.0.69:8006";  description = "Hypervisor"; icon = "proxmox.png"; }; }
+					{ "Proxmox"          = { href = "https://10.0.0.69:8006";  description = "Hypervisor";  icon = "proxmox.png"; }; }
+					{ "Change Detection" = { href = "https://change.ybmn.no"; description = "Page changes"; icon = "changedetection-io.png"; }; }
 				];
 			}
 			{

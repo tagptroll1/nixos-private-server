@@ -3,6 +3,29 @@
 let
 	webRoot       = "/var/www";
 	wordpressRoot = "${webRoot}/wordpress";
+
+	# Must-use plugin — always loaded, not disableable from WP admin.
+	# Managed by Nix; symlinked into wp-content/mu-plugins/ via tmpfiles.
+	hardeningPlugin = pkgs.writeText "sps-security-hardening.php" ''
+		<?php
+		/**
+		 * Security hardening — managed by NixOS, do not edit manually.
+		 */
+
+		// Genericise login error messages to prevent username enumeration.
+		// WordPress normally says "the password for username X is wrong" which
+		// confirms whether a username exists. This replaces all login errors with
+		// a single neutral message.
+		add_filter( 'login_errors', function() {
+			return 'Feil brukernavn eller passord.';
+		} );
+
+		// Remove WordPress version from asset query strings (?ver=x.y.z) and
+		// from the <meta name="generator"> tag in <head>.
+		remove_action( 'wp_head', 'wp_generator' );
+		add_filter( 'style_loader_src',  fn( $src ) => remove_query_arg( 'ver', $src ), 9999 );
+		add_filter( 'script_loader_src', fn( $src ) => remove_query_arg( 'ver', $src ), 9999 );
+	'';
 in
 {
 	# ── Database ───────────────────────────────────────────────────────────────
@@ -29,7 +52,8 @@ in
 			"pm.max_children"      = 10;
 			"pm.start_servers"     = 2;
 			"pm.min_spare_servers" = 1;
-			"pm.max_spare_servers" = 3;
+			"pm.max_spare_servers"        = 3;
+			"php_admin_value[expose_php]" = "Off";
 		};
 		phpPackage = pkgs.php83.buildEnv {
 			extensions = ({ enabled, all }: enabled ++ (with all; [
@@ -57,6 +81,8 @@ in
 			add_header X-Content-Type-Options "nosniff" always;
 			add_header X-XSS-Protection "1; mode=block" always;
 			add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+			add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
+			add_header Permissions-Policy "geolocation=(), microphone=(), camera=()" always;
 			access_log /var/log/nginx/wordpress_access.log wordpress_combined;
 		'';
 
@@ -70,6 +96,7 @@ in
 				fastcgi_pass  unix:${config.services.phpfpm.pools.wordpress.socket};
 				fastcgi_index index.php;
 				fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+				fastcgi_hide_header X-Powered-By;
 				include       ${pkgs.nginx}/conf/fastcgi_params;
 			'';
 		};
@@ -79,6 +106,9 @@ in
 		};
 
 		locations."= /xmlrpc.php"                                           = { extraConfig = "deny all;"; };
+		locations."= /wp-cron.php"                                          = { extraConfig = "deny all;"; };
+		locations."~ ^/wp-json/wp/v2/users"                                 = { extraConfig = "deny all;"; };
+		locations."~* /wp-sitemap-users"                                    = { extraConfig = "deny all;"; };
 		locations."~* ^/(readme|license|wp-config-sample)\\.(html|txt|php)$" = { extraConfig = "deny all;"; };
 		locations."= /wp-config.php"                                        = { extraConfig = "deny all;"; };
 		locations."~ /\\."                                                   = { extraConfig = "deny all;"; };
@@ -100,7 +130,8 @@ in
 			add_header X-Content-Type-Options "nosniff" always;
 			add_header X-XSS-Protection "1; mode=block" always;
 			add_header Referrer-Policy "strict-origin-when-cross-origin" always;
-			add_header Strict-Transport-Security "max-age=31536000" always;
+			add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
+			add_header Permissions-Policy "geolocation=(), microphone=(), camera=()" always;
 		'';
 
 		locations."/" = {
@@ -113,6 +144,7 @@ in
 				fastcgi_pass  unix:${config.services.phpfpm.pools.wordpress.socket};
 				fastcgi_index index.php;
 				fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+				fastcgi_hide_header X-Powered-By;
 				include       ${pkgs.nginx}/conf/fastcgi_params;
 			'';
 		};
@@ -144,7 +176,9 @@ in
 
 	# ── Directory setup ────────────────────────────────────────────────────────
 	systemd.tmpfiles.rules = [
-		"d ${wordpressRoot} 0755 nginx nginx - -"
+		"d  ${wordpressRoot}                              0755 nginx nginx - -"
+		"d  ${wordpressRoot}/wp-content/mu-plugins        0755 nginx nginx - -"
+		"L+ ${wordpressRoot}/wp-content/mu-plugins/sps-security-hardening.php - - - - ${hardeningPlugin}"
 	];
 
 	# ── One-shot WordPress deploy service ──────────────────────────────────────
@@ -191,6 +225,9 @@ in
 			sed -i "s/username_here/wordpress/"       "$WP_DIR/wp-config.php"
 			sed -i "s/password_here//"                "$WP_DIR/wp-config.php"
 
+			# Disable built-in HTTP cron (use systemd timer instead)
+			sed -i "/require_once.*wp-settings\.php/i\\define( 'DISABLE_WP_CRON', true );" "$WP_DIR/wp-config.php"
+
 			# Dynamic multi-domain URL detection (Pangolin + direct LAN access)
 			sed -i "/require_once.*wp-settings\.php/i\\
 \\
@@ -209,5 +246,26 @@ if ( isset( \$_SERVER['HTTP_HOST'] ) ) {\\
 
 			echo "WordPress setup complete."
 		'';
+	};
+
+	# ── WordPress cron via systemd timer (replaces wp-cron HTTP access) ────────
+	systemd.services."wp-cron" = {
+		description = "WordPress scheduled tasks";
+		after       = [ "nginx.service" ];
+		serviceConfig = {
+			Type    = "oneshot";
+			User    = "nginx";
+			ExecStart = "${pkgs.curl}/bin/curl -s --max-time 30 https://admin.sletteposten.no/wp-cron.php?doing_wp_cron=1";
+		};
+	};
+
+	systemd.timers."wp-cron" = {
+		description = "Run WordPress cron every 5 minutes";
+		wantedBy    = [ "timers.target" ];
+		timerConfig = {
+			OnBootSec      = "5min";
+			OnUnitActiveSec = "5min";
+			Unit           = "wp-cron.service";
+		};
 	};
 }

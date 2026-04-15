@@ -76,7 +76,7 @@ in {
           "ass.ybmn.no".extraConfig      = lanOnly "127.0.0.1:8123";
           "www.ass.ybmn.no".extraConfig  = "redir https://ass.ybmn.no{uri} permanent";
 
-          "z2m.ybmn.no".extraConfig      = lanOnly "127.0.0.1:8080";
+          "z2m.ybmn.no".extraConfig      = lanOnly "10.0.20.5:8080"; # z2m 2.x ignores frontend.host, binds to VM IP
           "www.z2m.ybmn.no".extraConfig  = "redir https://z2m.ybmn.no{uri} permanent";
 
           "change.ybmn.no".extraConfig    = lanOnly "127.0.0.1:5000";

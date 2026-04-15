@@ -76,6 +76,9 @@ in {
           "ass.ybmn.no".extraConfig      = lanOnly "127.0.0.1:8123";
           "www.ass.ybmn.no".extraConfig  = "redir https://ass.ybmn.no{uri} permanent";
 
+          "z2m.ybmn.no".extraConfig      = lanOnly "127.0.0.1:8080";
+          "www.z2m.ybmn.no".extraConfig  = "redir https://z2m.ybmn.no{uri} permanent";
+
           "change.ybmn.no".extraConfig    = lanOnly "127.0.0.1:5000";
           "www.change.ybmn.no".extraConfig = "redir https://change.ybmn.no{uri} permanent";
 

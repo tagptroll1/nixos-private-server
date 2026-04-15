@@ -19,6 +19,7 @@
 		./modules/changedetection.nix
 		./modules/homepage.nix
 		./modules/home-assistant.nix
+		./modules/zigbee2mqtt.nix
 	];
 	# set with e2label / mkfs.ext4 -L vmdata
 	fileSystems."/mnt/data" = {

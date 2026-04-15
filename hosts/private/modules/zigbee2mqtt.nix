@@ -1,4 +1,4 @@
-{ ... }:
+{ hostConfig, ... }:
 {
   # Mosquitto — local MQTT broker, only accessible from localhost
   services.mosquitto = {
@@ -28,8 +28,8 @@
 
       frontend = {
         enabled = true;
-        host = "127.0.0.1";
-        port = 8080;
+        host = hostConfig.ip;
+        port = 8124;
       };
     };
   };

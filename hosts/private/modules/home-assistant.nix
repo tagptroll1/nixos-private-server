@@ -7,6 +7,13 @@
     SUBSYSTEM=="tty", ATTRS{idVendor}=="10c4", ATTRS{idProduct}=="ea60", SYMLINK+="ttyZigbee", MODE="0660", GROUP="dialout"
   '';
 
+  # Create the !include'd files on first boot so HA doesn't enter recovery mode
+  systemd.tmpfiles.rules = [
+    "f /var/lib/hass/automations.yaml 0600 hass hass - -"
+    "f /var/lib/hass/scripts.yaml     0600 hass hass - -"
+    "f /var/lib/hass/scenes.yaml      0600 hass hass - -"
+  ];
+
   services.home-assistant = {
     enable = true;
     openFirewall = false;

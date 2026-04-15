@@ -3,6 +3,9 @@
   # Mosquitto — local MQTT broker, only accessible from localhost
   services.mosquitto = {
     enable = true;
+    settings = {
+      log_type = [ "all" ];
+    };
     listeners = [{
       address = "127.0.0.1";
       port = 1883;

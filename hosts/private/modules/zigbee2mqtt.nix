@@ -3,13 +3,13 @@
   # Mosquitto — local MQTT broker, only accessible from localhost
   services.mosquitto = {
     enable = true;
-    settings = {
-      log_type = [ "all" ];
-    };
     listeners = [{
       address = "127.0.0.1";
       port = 1883;
       settings.allow_anonymous = true;
+      # Without this, an empty ACL file silently denies all topic access
+      omitPasswordAuth = true;
+      acl = [ "topic readwrite #" ];
     }];
   };
 

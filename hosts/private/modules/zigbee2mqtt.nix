@@ -18,7 +18,7 @@
 
       serial = {
         port = "/dev/ttyZigbee";
-        adapter = "ezsp"; # ZBDongle-E uses EFR32MG21 (EZSP protocol)
+        adapter = "ember"; # ZBDongle-E uses EFR32MG21 — ember is the current driver (ezsp deprecated in z2m 2.x)
       };
 
       mqtt = {

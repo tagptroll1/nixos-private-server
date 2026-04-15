@@ -19,11 +19,13 @@
     openFirewall = false;
 
     extraComponents = [
-      "default_config" # required for onboarding
-      "met"            # weather/sun integration
-      "zha"            # Zigbee Home Automation — uses Sonoff ZBDongle-E via /dev/ttyZigbee
-                       # ZBDongle-E uses ezsp radio protocol (auto-detected by ZHA during UI setup)
-                       # Automatically adds hass to dialout group and allows ttyUSB/ttyACM devices
+      "default_config"  # required for onboarding
+      "met"             # weather/sun integration
+      "zha"             # Zigbee Home Automation — uses Sonoff ZBDongle-E via /dev/ttyZigbee
+                        # ZBDongle-E uses ezsp radio protocol (auto-detected by ZHA during UI setup)
+                        # Automatically adds hass to dialout group and allows ttyUSB/ttyACM devices
+      "radio_browser"   # pulled in by default_config; needs 'radios' Python package
+      "google_translate" # pulled in by default_config; needs 'gtts' Python package
     ];
 
     config = {

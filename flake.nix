@@ -69,6 +69,24 @@
           }
         ];
       };
+
+      media = nixpkgs.lib.nixosSystem {
+        specialArgs = {
+          inherit inputs;
+          hostConfig = hosts.media;
+        };
+        modules = [
+          sops-nix.nixosModules.sops
+          ./hosts/media
+          home-manager.nixosModules.home-manager
+          {
+            home-manager.useGlobalPkgs = true;
+            home-manager.useUserPackages = true;
+            home-manager.extraSpecialArgs = { inherit inputs; hostConfig = hosts.media; };
+            home-manager.users.tagp = import ./home/tagp;
+          }
+        ];
+      };
     };
   };
 }

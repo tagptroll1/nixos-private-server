@@ -30,6 +30,9 @@
       homeassistant = {
         name = "Home";
         unit_system = "metric";
+        latitude = 60.3913;
+        longitude = 5.3221;
+        elevation = 5;
       };
 
       http = {

@@ -22,4 +22,16 @@
 		systemData = "/var/lib";
 		userData = "/home/tagp/.local/share";
   };
+
+  media = {
+    hostname = "media";
+    interface = "ens18";
+    ip = "10.2.10.10";
+    gateway = "10.2.10.1";
+    prefixLength = 24;
+		nameservers = [ "10.2.10.1" "1.1.1.1" ];
+
+		systemData = "/var/lib";
+		userData = "/home/tagp/.local/share";
+  };
 }

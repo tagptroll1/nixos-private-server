@@ -3,6 +3,19 @@
   # Proprietary driver because nouveau power management on Pascal
   # is unreliable for sustained ML/encode workloads.
 
+  # Block in-tree drivers so the device is free for nvidia to claim at boot.
+  boot.blacklistedKernelModules = [ "nouveau" "nvidiafb" ];
+
+  # Force-load the nvidia kernel modules early so headless boot picks
+  # the GPU up without depending on xserver activation.
+  boot.kernelModules = [
+    "nvidia"
+    "nvidia_modeset"
+    "nvidia_uvm"
+    "nvidia_drm"
+  ];
+
+  # Also wires the userspace driver derivation in (libGL, ICDs, etc.).
   services.xserver.videoDrivers = [ "nvidia" ];
 
   hardware.graphics = {
@@ -20,6 +33,5 @@
 
   environment.systemPackages = with pkgs; [
     cudaPackages.cudatoolkit
-    nvidia-vaapi-driver
   ];
 }

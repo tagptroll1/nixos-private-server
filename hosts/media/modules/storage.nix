@@ -10,10 +10,9 @@ let
   };
 
   # Bind mounts splice host-owned ZFS datasets into Immich's per-user
-  # library directory. Immich segregates by user UUID by default
-  # (no storage template needed); we map each UUID-named subdir to the
-  # matching dataset on home02 so existing restic→Hetzner backups pick
-  # the photos up unchanged.
+  # library directory. The storage template puts user.storageLabel as
+  # the first path segment (`library/<label>/<y>/<MM>/<filename>`), so
+  # we mirror those label paths to the matching dataset on home02.
   bind = source: target: {
     ${target} = {
       device = source;
@@ -22,18 +21,19 @@ let
     };
   };
 
-  # Immich user UUIDs (visible in admin → Users, or each user's Account
-  # Settings → User ID). Add an entry here when a new user is created.
-  users = {
-    tagp = "e4cd2c79-7486-47b8-9812-de4588a69db0";
-    # karoline = "<uuid>";  # fill in after creating the account
+  # Storage labels assigned to each Immich user. Adding a user means:
+  # set their account's Storage Label to a new entry here, then add the
+  # bind mount + tmpfiles entry below.
+  labels = {
+    tagp = "tagp";
+    # karoline = "karoline";
   };
 in {
   fileSystems =
     (virtiofs "tagp"     "/mnt/tagp")
     // (virtiofs "karoline" "/mnt/karoline")
-    // (bind "/mnt/tagp/photos" "/var/lib/immich/library/${users.tagp}");
-    # // (bind "/mnt/karoline/photos" "/var/lib/immich/library/${users.karoline}");
+    // (bind "/mnt/tagp/photos" "/var/lib/immich/library/${labels.tagp}");
+    # // (bind "/mnt/karoline/photos" "/var/lib/immich/library/${labels.karoline}");
 
   systemd.tmpfiles.settings = {
     "10-immich-library" = {
@@ -43,10 +43,10 @@ in {
       "/var/lib/immich/library".d = {
         user = "immich"; group = "immich"; mode = "0750";
       };
-      "/var/lib/immich/library/${users.tagp}".d = {
+      "/var/lib/immich/library/${labels.tagp}".d = {
         user = "immich"; group = "immich"; mode = "0750";
       };
-      # "/var/lib/immich/library/${users.karoline}".d = {
+      # "/var/lib/immich/library/${labels.karoline}".d = {
       #   user = "immich"; group = "immich"; mode = "0750";
       # };
     };

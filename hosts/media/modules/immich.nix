@@ -24,4 +24,14 @@
 
     settings = null;
   };
+
+  # Pin the in-VM immich uid/gid to home02's tagp (uid=1001, gid=1001).
+  # Virtiofs preserves uids across the VM↔host boundary; matching them
+  # makes new files written by Immich appear owned by `tagp` on home02.
+  # Multi-user note: when karoline is added, her photos will also be
+  # owned by tagp on the host because virtiofs maps a single uid per
+  # share. Revisit (per-share uid mapping or shared `family` group)
+  # once she has her own dataset routing.
+  users.users.immich.uid = 1001;
+  users.groups.immich.gid = 1001;
 }

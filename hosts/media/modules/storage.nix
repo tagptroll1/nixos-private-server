@@ -26,14 +26,14 @@ let
   # bind mount + tmpfiles entry below.
   labels = {
     tagp = "tagp";
-    # karoline = "karoline";
+    karoline = "karoline";
   };
 in {
   fileSystems =
     (virtiofs "tagp"     "/mnt/tagp")
     // (virtiofs "karoline" "/mnt/karoline")
-    // (bind "/mnt/tagp/photos" "/var/lib/immich/library/${labels.tagp}");
-    # // (bind "/mnt/karoline/photos" "/var/lib/immich/library/${labels.karoline}");
+    // (bind "/mnt/tagp/photos" "/var/lib/immich/library/${labels.tagp}")
+    // (bind "/mnt/karoline/photos" "/var/lib/immich/library/${labels.karoline}");
 
   systemd.tmpfiles.settings = {
     "10-immich-library" = {
@@ -46,9 +46,9 @@ in {
       "/var/lib/immich/library/${labels.tagp}".d = {
         user = "immich"; group = "immich"; mode = "0750";
       };
-      # "/var/lib/immich/library/${labels.karoline}".d = {
-      #   user = "immich"; group = "immich"; mode = "0750";
-      # };
+      "/var/lib/immich/library/${labels.karoline}".d = {
+        user = "immich"; group = "immich"; mode = "0750";
+      };
     };
   };
 }

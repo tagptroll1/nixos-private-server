@@ -34,6 +34,7 @@
       mqtt = {
         server = "mqtt://localhost:1883";
         base_topic = "zigbee2mqtt";
+        retain = true;
       };
 
       frontend = {

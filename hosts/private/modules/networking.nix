@@ -1,10 +1,11 @@
 { config, pkgs, hostConfig, ... }:
 let
   inherit (pkgs) it-tools;
-  # Only serve to LAN — blocks access from public VM, internet pivots, etc.
+  # Only serve to LAN + tailnet — blocks access from public VM, internet pivots, etc.
   # Even if MikroTik firewall is misconfigured, Caddy won't serve these externally.
+  # Tailnet traffic arrives SNATed from the home01 routing LXC (10.0.0.50).
   lanOnly = upstream: ''
-    @lan remote_ip 192.168.0.0/24 192.168.54.0/24
+    @lan remote_ip 192.168.0.0/24 192.168.54.0/24 10.0.0.50/32
     handle @lan {
       reverse_proxy ${upstream}
     }
@@ -85,7 +86,7 @@ in {
           # IT Tools: static SPA from nix store, LAN only
           "tools.ybmn.no" = {
             extraConfig = ''
-              @lan remote_ip 192.168.0.0/24 192.168.54.0/24
+              @lan remote_ip 192.168.0.0/24 192.168.54.0/24 10.0.0.50/32
               handle @lan {
                 root * ${it-tools}/lib
                 file_server

@@ -1,4 +1,4 @@
-{ lib, hostConfig, ... }:
+{ hostConfig, ... }:
 {
   # Mosquitto — local MQTT broker, only accessible from localhost
   services.mosquitto = {
@@ -8,16 +8,8 @@
       port = 1883;
       settings.allow_anonymous = true;
       omitPasswordAuth = true;
+      acl = [ "pattern readwrite #" ];
     }];
-  };
-
-  # The NixOS mosquitto module generates an empty ACL file when no users are defined.
-  # An empty ACL file silently denies all topic access to everyone — override it.
-  environment.etc."mosquitto/acl-0.conf" = lib.mkForce {
-    text = "topic readwrite #\n";
-    mode = "0600";
-    user = "mosquitto";
-    group = "mosquitto";
   };
 
   services.zigbee2mqtt = {

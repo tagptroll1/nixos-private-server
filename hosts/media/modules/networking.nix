@@ -5,7 +5,7 @@
     useDHCP = false;
     firewall = {
       enable = true;
-      allowedTCPPorts = [ 80 443 ];
+      allowedTCPPorts = [ 22 80 443 ];
       # tailscale opens its own port via services.tailscale.openFirewall
       trustedInterfaces = [ "tailscale0" ];
     };

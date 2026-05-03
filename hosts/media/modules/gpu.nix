@@ -28,7 +28,9 @@
     open = false;
     nvidiaSettings = false;
     powerManagement.enable = false;
-    package = config.boot.kernelPackages.nvidiaPackages.stable;
+    # GTX 1070 (Pascal) is unsupported by the 595.xx mainline driver.
+    # Pin to the 580.xx Legacy branch — last branch that binds to GP104.
+    package = config.boot.kernelPackages.nvidiaPackages.legacy_580;
   };
 
   environment.systemPackages = with pkgs; [

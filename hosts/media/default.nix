@@ -17,6 +17,7 @@
 		./modules/tailscale.nix
 		./modules/caddy.nix
 		./modules/immich.nix
+		./modules/immich-public-proxy.nix
 	];
 
 	sops.age.keyFile = "/etc/age/host.key";

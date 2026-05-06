@@ -22,6 +22,9 @@
       "immich.ybmn.no".extraConfig = ''
         reverse_proxy 127.0.0.1:2283
       '';
+      "jellyfin.ybmn.no".extraConfig = ''
+        reverse_proxy 127.0.0.1:8096
+      '';
     };
   };
 

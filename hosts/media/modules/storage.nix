@@ -32,6 +32,7 @@ in {
   fileSystems =
     (virtiofs "tagp"     "/mnt/tagp")
     // (virtiofs "karoline" "/mnt/karoline")
+    // (virtiofs "media"  "/mnt/media")
     // (bind "/mnt/tagp/photos" "/var/lib/immich/library/${labels.tagp}")
     // (bind "/mnt/karoline/photos" "/var/lib/immich/library/${labels.karoline}");
 

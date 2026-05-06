@@ -18,6 +18,7 @@
 		./modules/caddy.nix
 		./modules/immich.nix
 		./modules/immich-public-proxy.nix
+		./modules/jellyfin.nix
 	];
 
 	sops.age.keyFile = "/etc/age/host.key";

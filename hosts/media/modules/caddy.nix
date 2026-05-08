@@ -23,7 +23,7 @@
         # LAN + Tailscale CGNAT + loopback. Caddy uses these matchers to
         # 403 anything else, since *.ybmn.no resolves on split-DNS only.
         trustedMatcher = ''
-          @trusted client_ip 10.2.10.0/24 100.64.0.0/10 127.0.0.1/8
+          @trusted client_ip 10.2.10.0/24 192.168.0.0/24 100.64.0.0/10 127.0.0.1/8
         '';
         gated = upstream: ''
           ${trustedMatcher}
@@ -50,8 +50,7 @@
       # from the host. Confirm with `ip -n wg a` after first boot if 192.168.15.1
       # ever drifts.
       "qbit.ybmn.no".extraConfig     = gated "192.168.15.1:8080";
-      # Mealie — primary at recipe.ybmn.no, alias mat.ybmn.no.
-      "recipe.ybmn.no, mat.ybmn.no".extraConfig = gated "127.0.0.1:9925";
+      "recipe.ybmn.no".extraConfig = gated "127.0.0.1:9925";
     };
   };
 

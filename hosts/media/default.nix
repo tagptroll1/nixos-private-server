@@ -16,6 +16,7 @@
 		./modules/gpu.nix
 		./modules/tailscale.nix
 		./modules/caddy.nix
+		./modules/mealie.nix
 		./modules/immich.nix
 		./modules/immich-public-proxy.nix
 		./modules/jellyfin.nix

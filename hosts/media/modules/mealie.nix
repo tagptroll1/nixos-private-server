@@ -1,11 +1,18 @@
-{ ... }: {
+{ lib, ... }: {
   # State lives under the `tagp` virtiofs share so it gets backed up alongside
-  # photos. Pre-create the directory on home02 before the first rebuild:
-  #   mkdir -p /<tagp-dataset>/appdata/mealie && chmod 0777 …
-  # Mealie runs with DynamicUser=true, so systemd allocates a stable uid per
-  # service name. After first boot you can tighten ownership by chowning the
-  # directory on home02 to whatever uid the `mealie` user resolved to inside
-  # the VM (`getent passwd mealie`).
+  # photos. Upstream's mealie module uses DynamicUser=true, which is
+  # incompatible with bind-mounting /var/lib/mealie directly (systemd manages
+  # the StateDirectory under /var/lib/private and bind-mounts it back). We
+  # pin a static uid/gid instead — same pattern as immich — and force
+  # DynamicUser off below.
+  users.users.mealie = {
+    isSystemUser = true;
+    group = "mealie";
+    uid = 992;
+    home = "/var/lib/mealie";
+  };
+  users.groups.mealie.gid = 992;
+
   fileSystems."/var/lib/mealie" = {
     device = "/mnt/tagp/appdata/mealie";
     fsType = "none";
@@ -21,5 +28,11 @@
       ALLOW_SIGNUP = "false";
       BASE_URL = "https://recipe.ybmn.no";
     };
+  };
+
+  systemd.services.mealie.serviceConfig = {
+    DynamicUser = lib.mkForce false;
+    User = "mealie";
+    Group = "mealie";
   };
 }

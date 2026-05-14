@@ -25,6 +25,14 @@
 
 	sops.age.keyFile = "/etc/age/host.key";
 	sops.secrets = {
+		"opencloud/admin_env" = {
+			sopsFile = ./secrets/opencloudSecret.yaml;
+			key = "admin_env";
+		};
+		"opencloud/collabora_env" = {
+			sopsFile = ./secrets/opencloudSecret.yaml;
+			key = "collabora_env";
+		};
 		"caddy/domeneshop_token" = {
 			sopsFile = ./secrets/caddySecret.yaml;
 			key = "token";

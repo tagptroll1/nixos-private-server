@@ -25,10 +25,6 @@
 
 	sops.age.keyFile = "/etc/age/host.key";
 	sops.secrets = {
-		"opencloud/shared_env" = {
-			sopsFile = ./secrets/opencloudSecret.yaml;
-			key = "shared_env";
-		};
 		"opencloud/admin_env" = {
 			sopsFile = ./secrets/opencloudSecret.yaml;
 			key = "admin_env";

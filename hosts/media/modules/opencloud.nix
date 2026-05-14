@@ -56,13 +56,11 @@
         IDM_CREATE_DEMO_USERS = "false";
         PROXY_ENABLE_BASIC_AUTH = "false";
       };
-      # Sops decrypts each YAML value verbatim into a file whose content is
-      # the entire `KEY=value` line(s), so the decrypted secret is directly
-      # envFile-compatible. shared_env holds the internal opencloud secrets
-      # (jwt, machine-auth, transfer) that BOTH opencloud and the collaboration
-      # service must agree on — same file mounted on both containers.
+      # Internal opencloud secrets (jwt, machine-auth, transfer, system-user-id
+      # etc.) are generated once via `opencloud init` and persisted in
+      # /mnt/cloud/config/opencloud.yaml. Only the admin password is supplied
+      # via env (sops); everything else lives in the yaml on the shared volume.
       environmentFiles = [
-        config.sops.secrets."opencloud/shared_env".path
         config.sops.secrets."opencloud/admin_env".path
       ];
       volumes = [
@@ -90,8 +88,10 @@
         MICRO_REGISTRY = "nats-js-kv";
         MICRO_REGISTRY_ADDRESS = "opencloud:9233";
       };
-      environmentFiles = [
-        config.sops.secrets."opencloud/shared_env".path
+      # Read the same opencloud.yaml as the main service so jwt/transfer/wopi
+      # secrets agree without us having to duplicate them via env.
+      volumes = [
+        "/mnt/cloud/config:/etc/opencloud:ro"
       ];
       dependsOn = [ "opencloud" ];
       extraOptions = [ "--network=opencloud-net" ];

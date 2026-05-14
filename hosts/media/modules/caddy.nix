@@ -3,12 +3,13 @@
     enable = true;
     package = pkgs.caddy.withPlugins {
       plugins = [
-        "github.com/tagptroll1/caddy-dns-domeneshop@v0.1.3"
+        "github.com/tagptroll1/caddy-dns-domeneshop@v0.1.5"
       ];
-      # Same plugin+version as private's caddy. If the hash drifts
-      # (e.g. from a nixpkgs caddy bump), set to "" for one build,
-      # then paste the printed sha256 here.
-      hash = "sha256-sFRz/HHY6eRbBoWq00qBuUa56gLz1sWUmJTU3aNpVMI=";
+      # Bump to v0.1.5: FQDN-driven zone resolution (fixes the "domain
+      # 'no' not found" ACME failure on multi-domain accounts).
+      # First build will fail with a hash mismatch and print the new
+      # sha256 — paste it here and rebuild.
+      hash = "";
     };
 
     globalConfig = ''

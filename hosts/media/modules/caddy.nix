@@ -30,22 +30,7 @@
         # check queries public resolvers instead of the local system
         # resolver, which can negatively-cache _acme-challenge lookups
         # from prior failed attempts.
-        # Query public resolvers for the DNS-01 propagation check rather
-        # than the local system resolver. Default propagation_timeout (2m)
-        # left in place — with a clean slate of TXT records the check
-        # succeeds within seconds and Caddy only notifies Let's Encrypt
-        # after its own check confirms the record is live.
-        tlsBlock = ''
-          tls {
-            dns domeneshop {
-              token  {env.DOMENESHOP_API_TOKEN}
-              secret {env.DOMENESHOP_API_SECRET}
-            }
-            resolvers 1.1.1.1 8.8.8.8
-          }
-        '';
         gated = upstream: ''
-          ${tlsBlock}
           ${trustedMatcher}
           handle @trusted {
             reverse_proxy ${upstream}

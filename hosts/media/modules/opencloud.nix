@@ -60,6 +60,9 @@
         # over the shared `opencloud-net` bridge.
         NATS_NATS_HOST = "0.0.0.0";
         NATS_NATS_PORT = "9233";
+        # Same for the gateway gRPC service — collaboration dials it to
+        # register itself as a WOPI app provider.
+        GATEWAY_GRPC_ADDR = "0.0.0.0:9142";
       };
       # Internal opencloud secrets (jwt, machine-auth, transfer, system-user-id
       # etc.) are generated once via `opencloud init` and persisted in
@@ -92,6 +95,9 @@
         # on the shared network instead of bouncing through Caddy.
         MICRO_REGISTRY = "nats-js-kv";
         MICRO_REGISTRY_ADDRESS = "opencloud:9233";
+        # Point gateway lookup at the main opencloud container's gRPC port
+        # instead of the default 127.0.0.1:9142 (which is this container).
+        OC_REVA_GATEWAY = "opencloud:9142";
       };
       # Read the same opencloud.yaml as the main service so jwt/transfer/wopi
       # secrets agree without us having to duplicate them via env.

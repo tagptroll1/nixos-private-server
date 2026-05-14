@@ -17,6 +17,7 @@
 		./modules/tailscale.nix
 		./modules/caddy.nix
 		./modules/mealie.nix
+		./modules/opencloud.nix
 		./modules/immich.nix
 		./modules/immich-public-proxy.nix
 		./modules/jellyfin.nix

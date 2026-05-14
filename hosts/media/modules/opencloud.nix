@@ -56,9 +56,13 @@
         IDM_CREATE_DEMO_USERS = "false";
         PROXY_ENABLE_BASIC_AUTH = "false";
       };
-      # Sops decrypts the YAML value verbatim, so the secret values are stored
-      # as complete `KEY=value` lines and the file is directly envFile-compatible.
+      # Sops decrypts each YAML value verbatim into a file whose content is
+      # the entire `KEY=value` line(s), so the decrypted secret is directly
+      # envFile-compatible. shared_env holds the internal opencloud secrets
+      # (jwt, machine-auth, transfer) that BOTH opencloud and the collaboration
+      # service must agree on — same file mounted on both containers.
       environmentFiles = [
+        config.sops.secrets."opencloud/shared_env".path
         config.sops.secrets."opencloud/admin_env".path
       ];
       volumes = [
@@ -86,6 +90,9 @@
         MICRO_REGISTRY = "nats-js-kv";
         MICRO_REGISTRY_ADDRESS = "opencloud:9233";
       };
+      environmentFiles = [
+        config.sops.secrets."opencloud/shared_env".path
+      ];
       dependsOn = [ "opencloud" ];
       extraOptions = [ "--network=opencloud-net" ];
     };

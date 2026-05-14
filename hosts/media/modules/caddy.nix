@@ -3,13 +3,13 @@
     enable = true;
     package = pkgs.caddy.withPlugins {
       plugins = [
-        "github.com/tagptroll1/caddy-dns-domeneshop@v0.1.5"
+        "github.com/tagptroll1/caddy-dns-domeneshop@v0.1.6"
       ];
-      # Bump to v0.1.5: FQDN-driven zone resolution (fixes the "domain
-      # 'no' not found" ACME failure on multi-domain accounts).
-      # First build will fail with a hash mismatch and print the new
-      # sha256 — paste it here and rebuild.
-      hash = "sha256-0NScJQRvqsD9p7Z1emVTneZ6sLD5IOcdv/t+94nrRvU=";
+      # v0.1.6: reconstruct FQDN from libdns relative-name + zone before
+      # matching the owned domain list (v0.1.5 still failed because
+      # certmagic strips the zone tail before calling the provider).
+      # First build will fail with hash mismatch — paste new sha256.
+      hash = "";
     };
 
     globalConfig = ''

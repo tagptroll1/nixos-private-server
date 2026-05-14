@@ -30,19 +30,18 @@
         # check queries public resolvers instead of the local system
         # resolver, which can negatively-cache _acme-challenge lookups
         # from prior failed attempts.
-        # Disable certmagic's internal propagation check (-1 is the
-        # documented "skip" sentinel) and let Let's Encrypt query our
-        # authoritative NS directly. Caddy's local check kept timing out
-        # with `last error: <nil>` even though 1.1.1.1/8.8.8.8 and
-        # ns*.hyp.net all returned the TXT — the auth NS publishes the
-        # record within seconds, which LE will see on its end.
+        # Query public resolvers for the DNS-01 propagation check rather
+        # than the local system resolver. Default propagation_timeout (2m)
+        # left in place — with a clean slate of TXT records the check
+        # succeeds within seconds and Caddy only notifies Let's Encrypt
+        # after its own check confirms the record is live.
         tlsBlock = ''
           tls {
             dns domeneshop {
               token  {env.DOMENESHOP_API_TOKEN}
               secret {env.DOMENESHOP_API_SECRET}
             }
-            propagation_timeout -1
+            resolvers 1.1.1.1 8.8.8.8
           }
         '';
         gated = upstream: ''

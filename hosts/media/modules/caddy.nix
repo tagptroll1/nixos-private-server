@@ -9,7 +9,7 @@
       # 'no' not found" ACME failure on multi-domain accounts).
       # First build will fail with a hash mismatch and print the new
       # sha256 — paste it here and rebuild.
-      hash = "";
+      hash = "sha256-0NScJQRvqsD9p7Z1emVTneZ6sLD5IOcdv/t+94nrRvU=";
     };
 
     globalConfig = ''

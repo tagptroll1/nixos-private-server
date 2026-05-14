@@ -55,6 +55,11 @@
         OC_PASSWORD_POLICY_MIN_CHARACTERS = "12";
         IDM_CREATE_DEMO_USERS = "false";
         PROXY_ENABLE_BASIC_AUTH = "false";
+        # Bind internal NATS registry on all interfaces inside the container
+        # so the separate `opencloud-collaboration` container can reach it
+        # over the shared `opencloud-net` bridge.
+        NATS_NATS_HOST = "0.0.0.0";
+        NATS_NATS_PORT = "9233";
       };
       # Internal opencloud secrets (jwt, machine-auth, transfer, system-user-id
       # etc.) are generated once via `opencloud init` and persisted in

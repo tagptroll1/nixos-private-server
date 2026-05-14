@@ -16,6 +16,9 @@
       acme_dns domeneshop {
         token  {env.DOMENESHOP_API_TOKEN}
         secret {env.DOMENESHOP_API_SECRET}
+        propagation_delay 30s
+        propagation_timeout 5m
+        resolvers 1.1.1.1 8.8.8.8
       }
     '';
 

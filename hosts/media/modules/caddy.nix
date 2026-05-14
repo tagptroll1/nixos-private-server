@@ -16,9 +16,6 @@
       acme_dns domeneshop {
         token  {env.DOMENESHOP_API_TOKEN}
         secret {env.DOMENESHOP_API_SECRET}
-        propagation_delay 30s
-        propagation_timeout 5m
-        resolvers 1.1.1.1 8.8.8.8
       }
     '';
 
@@ -29,7 +26,21 @@
         trustedMatcher = ''
           @trusted client_ip 10.2.10.0/24 192.168.0.0/24 100.64.0.0/10 127.0.0.1/8
         '';
+        # tlsBlock is appended to every vhost so the DNS-01 propagation
+        # check queries public resolvers instead of the local system
+        # resolver, which can negatively-cache _acme-challenge lookups
+        # from prior failed attempts.
+        tlsBlock = ''
+          tls {
+            dns domeneshop {
+              token  {env.DOMENESHOP_API_TOKEN}
+              secret {env.DOMENESHOP_API_SECRET}
+            }
+            resolvers 1.1.1.1 8.8.8.8
+          }
+        '';
         gated = upstream: ''
+          ${tlsBlock}
           ${trustedMatcher}
           handle @trusted {
             reverse_proxy ${upstream}

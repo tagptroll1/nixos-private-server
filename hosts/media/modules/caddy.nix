@@ -9,7 +9,7 @@
       # matching the owned domain list (v0.1.5 still failed because
       # certmagic strips the zone tail before calling the provider).
       # First build will fail with hash mismatch — paste new sha256.
-      hash = "";
+      hash = "sha256-/ZpUa2CVlrv9lHPkkEa1zmtuyE3Do13/eMiiyIY57rg=";
     };
 
     globalConfig = ''

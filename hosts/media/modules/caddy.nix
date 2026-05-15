@@ -9,7 +9,7 @@
       # zone (don't rewrite to FQDN). certmagic's propagation check was
       # AbsoluteName()-ing it again, producing _acme-challenge.X.ybmn.no.ybmn.no
       # and looping with `last error: <nil>` until timeout.
-      hash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
+      hash = "sha256-HEr2k748J8TK6tJE94lCorhMgLH6Q2j0QnZj1DoUsiw=";
     };
 
     logFormat = "level DEBUG";

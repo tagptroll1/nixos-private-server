@@ -26,17 +26,19 @@
         trustedMatcher = ''
           @trusted client_ip 10.2.10.0/24 192.168.0.0/24 100.64.0.0/10 127.0.0.1/8
         '';
-        # resolvers makes Caddy's DNS-01 propagation check query public
-        # resolvers directly, bypassing the local system resolver which
-        # can negatively-cache _acme-challenge.* from prior failed attempts
-        # and produce `last error: <nil>` timeouts.
+        # Query the zone's authoritative nameservers (hyp.net) directly for
+        # the DNS-01 propagation check. Public anycast resolvers like
+        # 1.1.1.1 have inconsistent cache state across POPs — the TXT
+        # appears and disappears between polls, so Caddy never confirms
+        # propagation and times out with `last error: <nil>`. Authoritative
+        # servers always reflect the source of truth.
         tlsBlock = ''
           tls {
             dns domeneshop {
               token  {env.DOMENESHOP_API_TOKEN}
               secret {env.DOMENESHOP_API_SECRET}
             }
-            resolvers 1.1.1.1 8.8.8.8
+            resolvers ns1.hyp.net ns2.hyp.net ns3.hyp.net
           }
         '';
         gated = upstream: ''

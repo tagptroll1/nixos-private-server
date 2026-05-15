@@ -40,6 +40,8 @@
               secret {env.DOMENESHOP_API_SECRET}
             }
             resolvers 151.249.124.1 192.174.68.10 151.249.126.3
+            propagation_delay 30s
+            propagation_timeout 5m
           }
         '';
         gated = upstream: ''

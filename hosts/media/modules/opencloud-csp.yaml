@@ -1,0 +1,38 @@
+directives:
+  child-src:
+    - "'self'"
+  connect-src:
+    - "'self'"
+    - "blob:"
+  default-src:
+    - "'none'"
+  font-src:
+    - "'self'"
+  frame-ancestors:
+    - "'self'"
+  frame-src:
+    - "'self'"
+    - "blob:"
+    - "https://collabora.ybmn.no/"
+  img-src:
+    - "'self'"
+    - "data:"
+    - "blob:"
+    - "https://collabora.ybmn.no/"
+  manifest-src:
+    - "'self'"
+  media-src:
+    - "'self'"
+  object-src:
+    - "'self'"
+    - "blob:"
+  script-src:
+    - "'self'"
+    - "'unsafe-inline'"
+    - "'unsafe-eval'"
+  style-src:
+    - "'self'"
+    - "'unsafe-inline'"
+  worker-src:
+    - "'self'"
+    - "blob:"

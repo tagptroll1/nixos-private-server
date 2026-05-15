@@ -63,6 +63,11 @@
         # Same for the gateway gRPC service — collaboration dials it to
         # register itself as a WOPI app provider.
         GATEWAY_GRPC_ADDR = "0.0.0.0:9142";
+        # OpenCloud 6.x web frontend uses eval() in some chunks; the
+        # baked-in default CSP omits 'unsafe-eval' and blocks signin JS,
+        # producing a redirect loop on the "Not logged in" page. Override
+        # with a mounted YAML that adds 'unsafe-eval' to script-src.
+        PROXY_CSP_CONFIG_FILE_LOCATION = "/etc/opencloud-csp.yaml";
       };
       # Internal opencloud secrets (jwt, machine-auth, transfer, system-user-id
       # etc.) are generated once via `opencloud init` and persisted in
@@ -74,6 +79,7 @@
       volumes = [
         "/mnt/cloud/config:/etc/opencloud"
         "/mnt/cloud/data:/var/lib/opencloud"
+        "${./opencloud-csp.yaml}:/etc/opencloud-csp.yaml:ro"
       ];
       extraOptions = [ "--network=opencloud-net" ];
     };

@@ -12,10 +12,7 @@
       hash = "sha256-HEr2k748J8TK6tJE94lCorhMgLH6Q2j0QnZj1DoUsiw=";
     };
 
-    logFormat = "level DEBUG";
     globalConfig = ''
-      debug
-      acme_ca https://acme-staging-v02.api.letsencrypt.org/directory
       acme_dns domeneshop {
         token  {env.DOMENESHOP_API_TOKEN}
         secret {env.DOMENESHOP_API_SECRET}

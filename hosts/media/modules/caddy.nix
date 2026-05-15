@@ -9,7 +9,7 @@
       # replaces the _acme-challenge TXT RRset. Previously stale TXTs
       # accumulated alongside the new one, causing certmagic's
       # checkAuthoritativeNss to time out with `last error: <nil>`.
-      hash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
+      hash = "sha256-cyHKghK8/i3DIg+Ja18Pa4R+gTh93FQFF2nly4KnKgk=";
     };
 
     globalConfig = ''

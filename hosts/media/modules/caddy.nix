@@ -39,7 +39,7 @@
               token  {env.DOMENESHOP_API_TOKEN}
               secret {env.DOMENESHOP_API_SECRET}
             }
-            resolvers ns1.hyp.net ns2.hyp.net ns3.hyp.net
+            resolvers 151.249.124.1 192.174.68.10 151.249.126.3
           }
         '';
         gated = upstream: ''

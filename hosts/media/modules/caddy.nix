@@ -13,6 +13,7 @@
     };
 
     globalConfig = ''
+      acme_ca https://acme-staging-v02.api.letsencrypt.org/directory
       acme_dns domeneshop {
         token  {env.DOMENESHOP_API_TOKEN}
         secret {env.DOMENESHOP_API_SECRET}

@@ -3,13 +3,13 @@
     enable = true;
     package = pkgs.caddy.withPlugins {
       plugins = [
-        "github.com/tagptroll1/caddy-dns-domeneshop@v0.1.6"
+        "github.com/tagptroll1/caddy-dns-domeneshop@v0.1.7"
       ];
-      # v0.1.6: reconstruct FQDN from libdns relative-name + zone before
-      # matching the owned domain list (v0.1.5 still failed because
-      # certmagic strips the zone tail before calling the provider).
-      # First build will fail with hash mismatch — paste new sha256.
-      hash = "sha256-/ZpUa2CVlrv9lHPkkEa1zmtuyE3Do13/eMiiyIY57rg=";
+      # v0.1.7: implements RecordSetter so each Present() atomically
+      # replaces the _acme-challenge TXT RRset. Previously stale TXTs
+      # accumulated alongside the new one, causing certmagic's
+      # checkAuthoritativeNss to time out with `last error: <nil>`.
+      hash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
     };
 
     globalConfig = ''

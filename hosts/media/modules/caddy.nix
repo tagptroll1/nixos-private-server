@@ -3,13 +3,13 @@
     enable = true;
     package = pkgs.caddy.withPlugins {
       plugins = [
-        "github.com/tagptroll1/caddy-dns-domeneshop@v0.1.7"
+        "github.com/tagptroll1/caddy-dns-domeneshop@v0.1.8"
       ];
-      # v0.1.7: implements RecordSetter so each Present() atomically
-      # replaces the _acme-challenge TXT RRset. Previously stale TXTs
-      # accumulated alongside the new one, causing certmagic's
-      # checkAuthoritativeNss to time out with `last error: <nil>`.
-      hash = "sha256-cyHKghK8/i3DIg+Ja18Pa4R+gTh93FQFF2nly4KnKgk=";
+      # v0.1.8: fix returned Record.Name to stay relative to the caller's
+      # zone (don't rewrite to FQDN). certmagic's propagation check was
+      # AbsoluteName()-ing it again, producing _acme-challenge.X.ybmn.no.ybmn.no
+      # and looping with `last error: <nil>` until timeout.
+      hash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
     };
 
     logFormat = "level DEBUG";

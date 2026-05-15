@@ -13,7 +13,6 @@
     };
 
     globalConfig = ''
-      debug
       acme_dns domeneshop {
         token  {env.DOMENESHOP_API_TOKEN}
         secret {env.DOMENESHOP_API_SECRET}
@@ -27,12 +26,17 @@
         trustedMatcher = ''
           @trusted client_ip 10.2.10.0/24 192.168.0.0/24 100.64.0.0/10 127.0.0.1/8
         '';
+        # resolvers makes Caddy's DNS-01 propagation check query public
+        # resolvers directly, bypassing the local system resolver which
+        # can negatively-cache _acme-challenge.* from prior failed attempts
+        # and produce `last error: <nil>` timeouts.
         tlsBlock = ''
           tls {
             dns domeneshop {
               token  {env.DOMENESHOP_API_TOKEN}
               secret {env.DOMENESHOP_API_SECRET}
             }
+            resolvers 1.1.1.1 8.8.8.8
           }
         '';
         gated = upstream: ''

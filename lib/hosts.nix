@@ -29,10 +29,6 @@
     ip = "10.2.10.10";
     gateway = "10.2.10.1";
     prefixLength = 24;
-		# Public resolvers only — MikroTik treats ybmn.no as authoritative for
-		# its own static entries and returns NXDOMAIN for everything else in
-		# the zone (including _acme-challenge.* records that Caddy needs to
-		# verify during DNS-01 challenges). Match private/public host config.
 		nameservers = [ "1.1.1.1" "8.8.8.8" ];
 
 		systemData = "/var/lib";

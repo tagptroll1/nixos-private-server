@@ -27,18 +27,12 @@
         trustedMatcher = ''
           @trusted client_ip 10.2.10.0/24 192.168.0.0/24 100.64.0.0/10 127.0.0.1/8
         '';
-        # propagation_timeout -1 skips Caddy's local propagation check.
-        # It kept timing out with `last error: <nil>` — a Caddy/certmagic
-        # quirk, not a real DNS issue. Domeneshop publishes the TXT, and
-        # Let's Encrypt's own validators query our authoritative NS
-        # directly, so skipping the local check is safe.
         tlsBlock = ''
           tls {
             dns domeneshop {
               token  {env.DOMENESHOP_API_TOKEN}
               secret {env.DOMENESHOP_API_SECRET}
             }
-            propagation_timeout -1
           }
         '';
         gated = upstream: ''

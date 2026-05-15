@@ -23,8 +23,14 @@
       let
         # LAN + Tailscale CGNAT + loopback. Caddy uses these matchers to
         # 403 anything else, since *.ybmn.no resolves on split-DNS only.
+        # 10.89.0.0/16 is the podman default bridge subnet — needed because
+        # OpenCloud's proxy makes internal HTTPS callbacks to its own OIDC
+        # userinfo endpoint via cloud.ybmn.no, and the source IP is the
+        # container's bridge address (e.g. 10.89.0.x). Without this the
+        # callback gets 403 and login appears to "succeed" but every API
+        # call returns 401.
         trustedMatcher = ''
-          @trusted client_ip 10.2.10.0/24 192.168.0.0/24 100.64.0.0/10 127.0.0.1/8
+          @trusted client_ip 10.2.10.0/24 192.168.0.0/24 100.64.0.0/10 127.0.0.1/8 10.89.0.0/16
         '';
         # Query the zone's authoritative nameservers (hyp.net) directly for
         # the DNS-01 propagation check. Public anycast resolvers like

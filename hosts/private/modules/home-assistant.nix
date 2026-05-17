@@ -18,6 +18,13 @@
     enable = true;
     openFirewall = false;
 
+    # Optional C-accelerated compression libs — silences the
+    # "zlib_ng and isal are not available" startup warning.
+    extraPackages = python3Packages: with python3Packages; [
+      isal
+      zlib-ng
+    ];
+
     extraComponents = [
       "default_config"  # required for onboarding
       "met"             # weather/sun integration

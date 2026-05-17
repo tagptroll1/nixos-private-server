@@ -40,7 +40,7 @@ in {
       # Leave as "" for first build — it will fail and print:
       #   got: sha256-<hash>
       # Paste that value here and rebuild.
-      hash = "sha256-sFRz/HHY6eRbBoWq00qBuUa56gLz1sWUmJTU3aNpVMI=";
+      hash = "sha256-txJPOw4n/Lfeb4tLRLN0e25Pq7SEYwngiu1ARqx/v+U=";
     };
 
     globalConfig = ''

@@ -11,8 +11,4 @@
     pciutils
     nvtopPackages.nvidia
   ];
-  programs.neovim = {
-    enable = true;
-    defaultEditor = true;
-  };
 }

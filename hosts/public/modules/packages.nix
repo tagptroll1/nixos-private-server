@@ -14,9 +14,4 @@
 		cargo
 		rustup
 	];
-
-	programs.neovim = {
-		enable = true;
-		defaultEditor = true;
-	};
 }

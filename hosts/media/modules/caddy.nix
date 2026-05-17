@@ -30,7 +30,7 @@
         # callback gets 403 and login appears to "succeed" but every API
         # call returns 401.
         trustedMatcher = ''
-          @trusted client_ip 10.2.10.0/24 192.168.0.0/24 100.64.0.0/10 127.0.0.1/8 10.89.0.0/16
+          @trusted client_ip 10.2.0.0/24 10.2.10.0/24 192.168.0.0/24 100.64.0.0/10 127.0.0.1/8 10.89.0.0/16
         '';
         # Query the zone's authoritative nameservers (hyp.net) directly for
         # the DNS-01 propagation check. Public anycast resolvers like

@@ -26,6 +26,7 @@
 		tmux
 		nixd
 		gcc
+		tree-sitter
 		lua-language-server
 		vscode-langservers-extracted
 		bash-language-server

@@ -24,6 +24,7 @@
       "mqtt"            # required for zigbee2mqtt ↔ HA device discovery
       "radio_browser"   # pulled in by default_config; needs 'radios' Python package
       "google_translate" # pulled in by default_config; needs 'gtts' Python package
+      "mobile_app"      # required for HA companion app registration
     ];
 
     config = {

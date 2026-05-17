@@ -3,13 +3,19 @@ let
   inherit (pkgs) it-tools;
   # Only serve to LAN + tailnet — blocks access from public VM, internet pivots, etc.
   # Even if MikroTik firewall is misconfigured, Caddy won't serve these externally.
-  # Tailnet traffic arrives SNATed from the home01 routing LXC (10.0.0.50).
+  #
+  # Tailscale subnet routing:
+  #   - home01 (10.0.0.69) advertises 10.0.0.0/24 only — does NOT cover this host (10.0.20.5).
+  #   - The routing LXC (10.0.0.50) advertises the wider LAN incl. 10.0.20.0/24 and SNATs,
+  #     so tailnet clients reach Caddy with source IP 10.0.0.50 (hence the /32 below).
+  #   - If a phone on Tailscale can't load ass.ybmn.no, verify 10.0.20.0/24 is still
+  #     advertised+approved on the routing LXC (admin UI → Machines → Subnets).
   lanOnly = upstream: ''
     @lan remote_ip 192.168.0.0/24 192.168.54.0/24 10.0.0.50/32
     handle @lan {
       reverse_proxy ${upstream}
     }
-    respond "Access denied" 403
+    respond "Access denied (src: {http.request.remote.host})" 403
   '';
   # Network hierarchy: VMs (private/public) must NOT reach 10.0.0.x (Server subnet).
   # Grafana (10.0.0.5) and Proxmox (10.0.0.69) are accessed directly from LAN —

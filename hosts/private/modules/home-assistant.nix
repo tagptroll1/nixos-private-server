@@ -35,6 +35,10 @@
     ];
 
     config = {
+      # default_config bundles mobile_app, frontend, history, etc.
+      # Without this line HA installs the components but never loads them.
+      default_config = {};
+
       homeassistant = {
         name = "Home";
         unit_system = "metric";
